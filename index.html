@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EU Refugee arrivals 2014 / 2015</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    <style>
+      html, body {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      #map {
+        height: 50%;
+        padding: 0;
+        margin: 0;
+      }
+
+      .cartodb-timeslider {
+          position: relative !important;
+          float: right;
+          margin-top: 40px;
+          margin-right: 40px;
+      }
+
+      #charts {
+        height: 500px;
+      }
+      #charts > div {
+        width: 100%;
+      }
+
+      #chart-total {
+        height: 30%;
+      }
+
+      #chart-monthly {
+        height: 20%;
+      }
+    </style>
+    <script type="cartocss/text" id="cartocss">
+      /** torque visualization */
+
+      Map {
+      -torque-frame-count:48;
+      -torque-animation-duration:30;
+      -torque-time-attribute:"time";
+      -torque-aggregation-function:"sum(value_norm)";
+      -torque-resolution:2;
+      -torque-data-aggregation:linear;
+      }
+
+      #data_2015_arrival_norm{
+        comp-op: lighter;
+        marker-fill-opacity: 1;
+        marker-line-color: #FFFFFF;
+        marker-line-width: 0;
+        marker-line-opacity: 1;
+        marker-type: ellipse;
+        marker-width: 10; 
+        marker-fill: #ffffb2;
+      }
+
+      #data_2015_arrival_norm[frame-offset=1] {
+        marker-fill-opacity:0.45; 
+      }
+      #data_2015_arrival_norm[frame-offset=2] {
+        marker-fill-opacity:0.225; 
+      }
+
+      /* arrivals > 1000 */
+      #data_2015_arrival_norm[value>2] {
+        marker-width: 20;  
+        marker-fill: #fed976;
+      }
+      /* arrivals > 5000 */
+      #data_2015_arrival_norm[value>9] {
+        marker-width: 30;  
+        marker-fill: #feb24c;
+      }
+      /* arrivals > 15000 */
+      #data_2015_arrival_norm[value>28] {
+        marker-width: 40;  
+        marker-fill: #fd8d3c;
+      }
+      /* arrivals > 50000 */
+      #data_2015_arrival_norm[value>94] {
+        marker-width: 50;  
+        marker-fill: #fc4e2a;
+      }
+      /* arrivals > 75000 */
+      #data_2015_arrival_norm[value>142] {
+        marker-width: 60; 
+        marker-fill: #e31a1c;
+      }
+      /* arrivals > 100000 */
+      #data_2015_arrival_norm[value>189] {
+        marker-width: 70;
+        marker-fill: #b10026;
+      }
+ 
+    </script>
+    
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+    <link rel="stylesheet" href="css/c3.css" />
+  </head>
+  <body>
+
+
+
+    <div id="map"></div>
+    <div id="chart-total"></div>
+    <div id="chart-monthly"></div>
+
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.15/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+
+    <script>
+      function main() {
+        var data = {
+        "gr": ["Greece", 955, 1001, 1501, 1257, 1703, 3198, 3927, 6742, 7454, 7432, 3812, 2056, 1694, 2873, 7874, 13556, 17889, 31318, 54899, 107843, 147123, 211663, 151249, 108742],
+        "it": ["Italy", 2171, 3335, 5459, 15679, 14599, 22641, 24031, 24774, 26107, 15277, 9295, 6732, 3528, 4354, 2283, 16063, 21235, 22891, 23186, 22609, 15922, 8916, 3218, 9637],
+        "mt": ["Malta", 0, 0, 91, 0, 0, 136, 81, 257, 3, 0, 0, 0, 87, 0, 0, 5, 0, 2, 2, 2, 7, 0, 0, 0],
+        "es": ["Spain", 144, 33, 232, 148, 325, 246, 264, 1705, 380, 341, 211, 319, 241, 44, 267, 240, 438, 377, 346, 385, 459, 795, 508, 308],
+        "total": ["Total", 3270, 4369, 7283, 17084, 16627, 26221, 28303, 33478, 33944, 23050, 13318, 9107, 5550, 7271, 10424, 29864, 39562, 54588, 78433, 130839, 163511, 221374, 154975, 118687],
+        "accumulated": ["Accumulated", 3270, 7639, 14922, 32006, 48633, 74854, 103157, 136635, 170579, 193629, 206947, 216054, 221604, 228875, 239299, 269163, 308725, 363313, 441746, 572585, 736096, 957470, 1112445, 1231132]
+        }
+
+        buildCharts();
+
+        buildMap();
+
+        function buildMap() {
+          var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+          });
+
+          var map = new L.map('map', {
+              center: [25,25], // Western Egypt
+              zoom: 4
+          });
+
+          map.addLayer(layer);
+          map.on('load', buildCharts);
+
+          var tableName = "data_2015_arrival_norm";
+          var userName = "amercader";
+
+          var layerSource = {
+              type: 'torque',
+              options: {
+                  table_name: tableName,
+                  user_name: userName,
+                  cartocss: $("#cartocss").html()
+              }
+          }
+
+          cartodb.createLayer(map, layerSource)
+            .addTo(map)
+            .done(function(layer) {
+                var torqueLayer = layer;
+                torqueLayer.pause();
+
+                torqueLayer.on('load', function() {
+                    torqueLayer.play();
+                });
+
+                // pause animation at last frame
+                torqueLayer.on('change:time', function(changes) {
+                    if (changes.step === torqueLayer.provider.getSteps() - 1) {
+                        torqueLayer.pause();
+                    }
+                });
+
+            })
+            .error(function(err) {
+                console.log("Error: " + err);
+            });
+        }
+
+        function buildCharts() {
+          function formatAxisLabels (x) {
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var year =  (x > 11) ? '15' : '14';
+            return ((x > 11) ? months[x - 12] : months[x]) + ' ' + year;
+          };
+
+          var chartMonthly = c3.generate({
+            bindto: '#chart-monthly',
+            data: {
+              columns: [
+                data['gr'],
+                data['it'],
+                data['es'],
+                data['mt'],
+              ],
+              type: 'bar',
+              groups: [
+                ['Greece', 'Italy', 'Spain', 'Malta']
+              ]
+            },
+            axis: {
+              x: {
+                tick: {
+                  format: formatAxisLabels
+                }
+              },
+              y: {
+                tick: {
+                  values: [50000, 100000, 150000, 200000]
+                }
+              }
+            }
+          });
+
+          var chartTotal = c3.generate({
+            bindto: '#chart-total',
+            data: {
+              columns: [
+                data['accumulated']
+              ],
+              type: 'line',
+            },
+            axis: {
+              x: {
+                tick: {
+                  format: formatAxisLabels
+                }
+              }
+            },
+            grid: {
+              y: {
+                show: true
+              }
+            }
+          });
+          }
+      }
+
+      window.onload = main;
+    </script>
+  </body>
+</html>
