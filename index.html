@@ -4,7 +4,6 @@
     <title>EU Refugee arrivals 2014 / 2015</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
     <style>
       html, body {
         height: 100%;
@@ -12,8 +11,14 @@
         margin: 0;
       }
 
+      #main {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
       #map {
         height: 50%;
+        min-height: 300px;
         padding: 0;
         margin: 0;
       }
@@ -107,19 +112,17 @@
     <link rel="stylesheet" href="css/c3.css" />
   </head>
   <body>
-
-
-
-    <div id="map"></div>
-    <div id="chart-total"></div>
-    <div id="chart-monthly"></div>
-
+    <div id="main">
+      <div id="map"></div>
+      <div id="chart-monthly"></div>
+      <div id="chart-total"></div>
+    </div>
     <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.15/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
 
     <script>
-      function main() {
+      App = (function() {
         var data = {
         "gr": ["Greece", 955, 1001, 1501, 1257, 1703, 3198, 3927, 6742, 7454, 7432, 3812, 2056, 1694, 2873, 7874, 13556, 17889, 31318, 54899, 107843, 147123, 211663, 151249, 108742],
         "it": ["Italy", 2171, 3335, 5459, 15679, 14599, 22641, 24031, 24774, 26107, 15277, 9295, 6732, 3528, 4354, 2283, 16063, 21235, 22891, 23186, 22609, 15922, 8916, 3218, 9637],
@@ -128,10 +131,6 @@
         "total": ["Total", 3270, 4369, 7283, 17084, 16627, 26221, 28303, 33478, 33944, 23050, 13318, 9107, 5550, 7271, 10424, 29864, 39562, 54588, 78433, 130839, 163511, 221374, 154975, 118687],
         "accumulated": ["Accumulated", 3270, 7639, 14922, 32006, 48633, 74854, 103157, 136635, 170579, 193629, 206947, 216054, 221604, 228875, 239299, 269163, 308725, 363313, 441746, 572585, 736096, 957470, 1112445, 1231132]
         }
-
-        buildCharts();
-
-        buildMap();
 
         function buildMap() {
           var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
@@ -237,10 +236,20 @@
               }
             }
           });
-          }
-      }
+        }
 
-      window.onload = main;
+        return {
+          data: data,
+          chartTotal: null,
+          chartMonthly: null,
+          init: function() {
+            buildCharts();
+            buildMap();
+          }
+        }
+      })()
+
+      window.onload = App.init;
     </script>
   </body>
 </html>
