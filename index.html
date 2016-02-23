@@ -64,40 +64,40 @@
         marker-line-width: 0;
         marker-line-opacity: 1;
         marker-type: ellipse;
-        marker-width: 10; 
+        marker-width: 10;
         marker-fill: #ffffb2;
       }
 
       #data_2015_arrival_norm[frame-offset=1] {
-        marker-fill-opacity:0.45; 
+        marker-fill-opacity:0.45;
       }
       #data_2015_arrival_norm[frame-offset=2] {
-        marker-fill-opacity:0.225; 
+        marker-fill-opacity:0.225;
       }
 
       /* arrivals > 1000 */
       #data_2015_arrival_norm[value>2] {
-        marker-width: 20;  
+        marker-width: 20;
         marker-fill: #fed976;
       }
       /* arrivals > 5000 */
       #data_2015_arrival_norm[value>9] {
-        marker-width: 30;  
+        marker-width: 30;
         marker-fill: #feb24c;
       }
       /* arrivals > 15000 */
       #data_2015_arrival_norm[value>28] {
-        marker-width: 40;  
+        marker-width: 40;
         marker-fill: #fd8d3c;
       }
       /* arrivals > 50000 */
       #data_2015_arrival_norm[value>94] {
-        marker-width: 50;  
+        marker-width: 50;
         marker-fill: #fc4e2a;
       }
       /* arrivals > 75000 */
       #data_2015_arrival_norm[value>142] {
-        marker-width: 60; 
+        marker-width: 60;
         marker-fill: #e31a1c;
       }
       /* arrivals > 100000 */
@@ -105,9 +105,9 @@
         marker-width: 70;
         marker-fill: #b10026;
       }
- 
+
     </script>
-    
+
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
     <link rel="stylesheet" href="css/c3.css" />
   </head>
@@ -172,12 +172,29 @@
                     if (changes.step === torqueLayer.provider.getSteps() - 1) {
                         torqueLayer.pause();
                     }
+                    if (changes.step % 2 == 0) {
+                      var index = changes.time.getMonth() + ((changes.time.getFullYear() == 2014) ? 0 : 12);
+                      loadData(index);
+                    }
                 });
 
             })
             .error(function(err) {
                 console.log("Error: " + err);
             });
+        }
+
+        function loadData(index) {
+          var start = 0
+          var end = index + 2;
+          App.chartMonthly.load({
+            columns: [
+              data['gr'].slice(start, end),
+              data['it'].slice(start, end),
+              data['es'].slice(start, end),
+              data['mt'].slice(start, end)
+            ]
+          })
         }
 
         function buildCharts() {
@@ -187,15 +204,17 @@
             return ((x > 11) ? months[x - 12] : months[x]) + ' ' + year;
           };
 
-          var chartMonthly = c3.generate({
+          App.chartMonthly = c3.generate({
             bindto: '#chart-monthly',
             data: {
+
               columns: [
-                data['gr'],
-                data['it'],
-                data['es'],
-                data['mt'],
+                data['gr'].slice(0,2),
+                data['it'].slice(0,2),
+                data['es'].slice(0,2),
+                data['mt'].slice(0,2)
               ],
+
               type: 'bar',
               groups: [
                 ['Greece', 'Italy', 'Spain', 'Malta']
@@ -209,13 +228,13 @@
               },
               y: {
                 tick: {
-                  values: [50000, 100000, 150000, 200000]
+                  values: [5000, 10000, 25000, 50000, 100000, 150000, 200000],
                 }
               }
             }
           });
 
-          var chartTotal = c3.generate({
+          App.chartTotal = c3.generate({
             bindto: '#chart-total',
             data: {
               columns: [
