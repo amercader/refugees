@@ -185,7 +185,7 @@
         }
 
         function loadData(index) {
-          var start = 0
+          var start = 0;
           var end = index + 2;
           App.chartMonthly.load({
             columns: [
@@ -194,7 +194,13 @@
               data['es'].slice(start, end),
               data['mt'].slice(start, end)
             ]
-          })
+          });
+
+          App.chartTotal.load({
+            columns: [
+              data['accumulated'].slice(start, end)
+            ]
+          });
         }
 
         function buildCharts() {
@@ -207,12 +213,11 @@
           App.chartMonthly = c3.generate({
             bindto: '#chart-monthly',
             data: {
-
               columns: [
-                data['gr'].slice(0,2),
-                data['it'].slice(0,2),
-                data['es'].slice(0,2),
-                data['mt'].slice(0,2)
+                data['gr'].slice(0, 1),
+                data['it'].slice(0, 1),
+                data['es'].slice(0, 1),
+                data['mt'].slice(0, 1)
               ],
 
               type: 'bar',
@@ -225,22 +230,23 @@
                 tick: {
                   format: formatAxisLabels
                 }
-              },
+              }
+            },
+            grid: {
               y: {
-                tick: {
-                  values: [5000, 10000, 25000, 50000, 100000, 150000, 200000],
-                }
+                show: true
               }
             }
+
           });
 
           App.chartTotal = c3.generate({
             bindto: '#chart-total',
             data: {
               columns: [
-                data['accumulated']
+                data['accumulated'].slice(0, 1)
               ],
-              type: 'line',
+              type: 'area',
             },
             axis: {
               x: {
