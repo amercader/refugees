@@ -49,7 +49,7 @@
       /** torque visualization */
 
       Map {
-      -torque-frame-count:48;
+      -torque-frame-count:240;
       -torque-animation-duration:30;
       -torque-time-attribute:"time";
       -torque-aggregation-function:"sum(value_norm)";
@@ -69,10 +69,19 @@
       }
 
       #data_2015_arrival_norm[frame-offset=1] {
-        marker-fill-opacity:0.45;
+        marker-fill-opacity:0.95;
       }
       #data_2015_arrival_norm[frame-offset=2] {
-        marker-fill-opacity:0.225;
+        marker-fill-opacity:0.75;
+      }
+      #data_2015_arrival_norm[frame-offset=3] {
+        marker-fill-opacity:0.55;
+      }
+      #data_2015_arrival_norm[frame-offset=4] {
+        marker-fill-opacity:0.35;
+      }
+      #data_2015_arrival_norm[frame-offset=5] {
+        marker-fill-opacity:0.15;
       }
 
       /* arrivals > 1000 */
@@ -132,6 +141,8 @@
         "accumulated": ["Accumulated", 3270, 7639, 14922, 32006, 48633, 74854, 103157, 136635, 170579, 193629, 206947, 216054, 221604, 228875, 239299, 269163, 308725, 363313, 441746, 572585, 736096, 957470, 1112445, 1231132]
         }
 
+        var lastIndex;
+
         function buildMap() {
           var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
               attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
@@ -172,8 +183,10 @@
                     if (changes.step === torqueLayer.provider.getSteps() - 1) {
                         torqueLayer.pause();
                     }
-                    if (changes.step % 2 == 0) {
-                      var index = changes.time.getMonth() + ((changes.time.getFullYear() == 2014) ? 0 : 12);
+
+                    var index = changes.time.getMonth() + ((changes.time.getFullYear() == 2014) ? 0 : 12);
+                    if (index != lastIndex) {
+                      lastIndex = index;
                       loadData(index);
                     }
                 });
