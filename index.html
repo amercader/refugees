@@ -9,11 +9,27 @@
         height: 100%;
         padding: 0;
         margin: 0;
+        font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+        color: #606060;
+      }
+
+      body {
+        background: url('css/bg.jpg') no-repeat center center fixed;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+      }
+
+      h1 {
+        font-size: 2.5em;
       }
 
       #main {
         max-width: 900px;
         margin: 0 auto;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 30px;
       }
 
       #map {
@@ -24,37 +40,50 @@
       }
 
       .cartodb-timeslider {
-          position: relative !important;
-          float: right;
-          margin-top: 40px;
-          margin-right: 40px;
+        position: relative !important;
+        float: right;
+        margin-top: 40px;
+        margin-right: 40px;
+      }
+
+      .cartodb-timeslider .time .value {
+        font-weight: bold;
+        line-height: 42px;
+        font-size: 20px;
+        color: #606060;
       }
 
       #charts {
         height: 500px;
       }
+
       #charts > div {
         width: 100%;
       }
 
       #chart-total {
-        height: 30%;
+        height: 200px;
       }
 
       #chart-monthly {
-        height: 20%;
+        height: 250px;
+      }
+
+      .c3 svg text {
+        font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+        color: #606060;
       }
     </style>
     <script type="cartocss/text" id="cartocss">
       /** torque visualization */
 
       Map {
-      -torque-frame-count:240;
-      -torque-animation-duration:30;
-      -torque-time-attribute:"time";
-      -torque-aggregation-function:"sum(value_norm)";
-      -torque-resolution:2;
-      -torque-data-aggregation:linear;
+        -torque-frame-count:240;
+        -torque-animation-duration:30;
+        -torque-time-attribute:"time";
+        -torque-aggregation-function:"sum(value_norm)";
+        -torque-resolution:2;
+        -torque-data-aggregation:linear;
       }
 
       #data_2015_arrival_norm{
@@ -122,9 +151,17 @@
   </head>
   <body>
     <div id="main">
+
+      <h1>EU Refugee arrivals 2014 / 2015</h1>
       <div id="map"></div>
+
+      <h2>Totals by Country and Month</h2>
       <div id="chart-monthly"></div>
+
+      <h2>Total Accumulated by Month</h2>
       <div id="chart-total"></div>
+
+      </div>
     </div>
     <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.15/d3.min.js"></script>
@@ -149,8 +186,8 @@
           });
 
           var map = new L.map('map', {
-              center: [39, 13],
-              zoom: 4
+              center: [39, 20],
+              zoom: 5
           });
 
           map.addLayer(layer);
