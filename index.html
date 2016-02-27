@@ -254,11 +254,17 @@
         }
 
         function buildCharts() {
+
           function formatAxisLabels (x) {
             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var year =  (x > 11) ? '15' : '14';
             return ((x > 11) ? months[x - 12] : months[x]) + ' ' + year;
           };
+
+          function formatNumber(x) {
+            // Thanks http://stackoverflow.com/a/2901298
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          }
 
           App.chartMonthly = c3.generate({
             bindto: '#chart-monthly',
@@ -280,14 +286,27 @@
                 tick: {
                   format: formatAxisLabels
                 }
+              },
+              y: {
+                tick: {
+                  format: function(label) {
+                    return formatNumber(label);
+                  }
+                }
               }
             },
             grid: {
               y: {
                 show: true
               }
+            },
+            tooltip: {
+              format: {
+                value: function (value, ratio, id, index) {
+                  return formatNumber(value);
+                }
+              }
             }
-
           });
 
           App.chartTotal = c3.generate({
@@ -303,13 +322,28 @@
                 tick: {
                   format: formatAxisLabels
                 }
+              },
+              y: {
+                tick: {
+                  format: function(label) {
+                    return formatNumber(label);
+                  }
+                }
               }
             },
             grid: {
               y: {
                 show: true
               }
+            },
+            tooltip: {
+              format: {
+                value: function (value, ratio, id, index) {
+                  return formatNumber(value);
+                }
+              }
             }
+
           });
         }
 
