@@ -255,11 +255,24 @@
 
         function buildCharts() {
 
-          function formatAxisLabels (x) {
-            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          function formatMonth(x, full) {
+            var months = ['January', 'February', 'March', 'April', 'May', 'June',
+              'July', 'August', 'September', 'October', 'November', 'December'];
+
             var year =  (x > 11) ? '15' : '14';
-            return ((x > 11) ? months[x - 12] : months[x]) + ' ' + year;
+            var month = (x > 11) ? months[x - 12] : months[x];
+            if (full) year = '20' + year;
+            if (!full) month = month.substring(0, 3);
+            return month + ' ' + year;
           };
+
+          function formatAxisLabels(x) {
+            return formatMonth(x, false);
+          }
+
+          function formatTitle(x) {
+            return formatMonth(x, true);
+          }
 
           function formatNumber(x) {
             // Thanks http://stackoverflow.com/a/2901298
@@ -289,9 +302,7 @@
               },
               y: {
                 tick: {
-                  format: function(label) {
-                    return formatNumber(label);
-                  }
+                  format: formatNumber
                 }
               }
             },
@@ -302,9 +313,8 @@
             },
             tooltip: {
               format: {
-                value: function (value, ratio, id, index) {
-                  return formatNumber(value);
-                }
+                value: formatNumber,
+                title: formatTitle
               }
             }
           });
@@ -325,9 +335,7 @@
               },
               y: {
                 tick: {
-                  format: function(label) {
-                    return formatNumber(label);
-                  }
+                  format: formatNumber
                 }
               }
             },
@@ -338,9 +346,8 @@
             },
             tooltip: {
               format: {
-                value: function (value, ratio, id, index) {
-                  return formatNumber(value);
-                }
+                value: formatNumber,
+                title: formatTitle
               }
             }
 
