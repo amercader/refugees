@@ -1,4 +1,4 @@
-# EU Refugee Sea Arrivals 2014 / 2015
+# EU Migrant and Refugee Sea Arrivals 2014 / 2015
 
 Made with data from [UNHCR - The UN Refugee Agency](http://www.unhcr.org), available on the [Humanitarian Data Exchange](https://data.hdx.rwlabs.org/dataset/mediterranean-sea-arrivals-data-in-2015).
 
