@@ -25,11 +25,26 @@
         font-size: 2.5em;
       }
 
+      a {
+        color: #af202f;
+      }
+
       #main {
         max-width: 900px;
         margin: 0 auto;
         background-color: rgba(255, 255, 255, 0.8);
         padding: 30px;
+      }
+
+      #help {
+        font-size: 0.85em;
+        margin-bottom: 30px;
+      }
+
+      #info {
+        border-top: 1px solid #606060;
+        margin-bottom: 100px;
+        margin-top: 40px;
       }
 
       #map {
@@ -153,6 +168,11 @@
     <div id="main">
 
       <h1>EU Refugee arrivals 2014 / 2015</h1>
+
+      <div id="help">
+        Click on the map Pause / Play button to Stop / Start the animation or drag the slider to a particular month. <a href="#info">+ Info</a>.
+      </div>
+
       <div id="map"></div>
 
       <h2>Totals by Country and Month</h2>
@@ -160,6 +180,12 @@
 
       <h2>Total Accumulated by Month</h2>
       <div id="chart-total"></div>
+
+      <div id="info">
+        <h3>Information</h3>
+        <p>Made with data from <a href="http://www.unhcr.org">UNHCR - The UN Refugee Agency</a>, available on the <a href="https://data.hdx.rwlabs.org/dataset/mediterranean-sea-arrivals-data-in-2015">Humanitarian Data Exchange</a>. Built with <a href="http://cartodb.com/">CartoDB</a>'s <a href="https://cartodb.com/torque/">Torque.js</a> library and <a href="http://c3js.org/">C3,js</a>. Background picture by jarmoluk on <a href="https://pixabay.com/en/sky-clouds-landscapes-blue-nature-264778/">Pixabay</a>.</p>
+        <p>Made by <a href="https://twitter.com/amercader">Adrià Mercader</a>. Sources are on <a href="https://github.com/amercader/refugees">GitHub</a>.</p>
+      </div>
 
       </div>
     </div>
